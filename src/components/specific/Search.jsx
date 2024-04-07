@@ -8,7 +8,8 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-// import React, { useEffect, useState } from "react";
+ import React, { useState } from "react";
+import { sampleUsers } from "../constants/sampleData";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useAsyncMutation } from "../../hooks/hook";
 // import {
@@ -16,7 +17,7 @@ import {
 //   useSendFriendRequestMutation,
 // } from "../../redux/api/api";
 // import { setIsSearch } from "../../redux/reducers/misc";
-//import UserItem from "../shared/UserItem";
+import UserItem from "../shared/UserItem";
 
 const Search = () => {
   // const { isSearch } = useSelector((state) => state.misc);
@@ -30,12 +31,13 @@ const Search = () => {
   //const dispatch = useDispatch();
 
   const search = useInputValidation("");
+  let isLoadingSendFriendRequest=false;
+   const [users, setUsers] = useState(sampleUsers);
 
-   const [users, setUsers] = useState([]);
-
-  // const addFriendHandler = async (id) => {
-  //   await sendFriendRequest("Sending friend request...", { userId: id });
-  // };
+  const addFriendHandler = (id) => {
+    // await sendFriendRequest("Sending friend request...", { userId: id });
+    console.log(id);
+  };
 
   // const searchCloseHandler = () => dispatch(setIsSearch(false));
 
@@ -77,7 +79,7 @@ const Search = () => {
               user={i}
               key={i._id}
               handler={addFriendHandler}
-              handlerIsLoading={isLoadingSendFriendRequest}
+               handlerIsLoading={isLoadingSendFriendRequest}
             />
           ))}
         </List>
