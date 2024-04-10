@@ -14,6 +14,8 @@ import {
 } from "@mui/icons-material";
 import { InputBox } from "../components/styles/StyledComponents";
 import FileMenu from "../components/dialogs/FileMenu";
+import { sampleMessage } from "../components/constants/sampleData";
+import MessageComponent from "../components/shared/MessageComponent";
 // import FileMenu from "../components/dialogs/FileMenu";
 // import MessageComponent from "../components/shared/MessageComponent";
 // import { getSocket } from "../socket";
@@ -33,7 +35,10 @@ import FileMenu from "../components/dialogs/FileMenu";
 // import { removeNewMessagesAlert } from "../redux/reducers/chat";
 // import { TypingLoader } from "../components/layout/Loaders";
 // import { useNavigate } from "react-router-dom";
-
+const user={
+  _id:"me",
+  name:"sagar"
+}
 const Chat = ({ chatId, user }) => {
   // const socket = getSocket();
   // const dispatch = useDispatch();
@@ -195,11 +200,11 @@ const Chat = ({ chatId, user }) => {
           overflowY: "auto",
         }}
       >
-        {/* {allMessages.map((i) => (
-          <MessageComponent key={i._id} message={i} user={user} />
+        {sampleMessage.map((i) => (
+          <MessageComponent key={i._id}  message={i} user={user} />
         ))}
 
-        {userTyping && <TypingLoader />}
+        {/* {userTyping && <TypingLoader />}
 
         <div ref={bottomRef} /> */}
       </Stack>
