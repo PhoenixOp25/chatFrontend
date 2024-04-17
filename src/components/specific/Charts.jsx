@@ -16,7 +16,7 @@ import {
     orangeLight,
     purple,
     purpleLight,
-  } from "../constants/color";
+  } from "../../constants/color";
   import { getLast7Days } from "../../lib/features";
   
   ChartJS.register(

@@ -6,7 +6,7 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { bgGradient } from "../../components/constants/color";
+import { bgGradient } from "../../constants/color";
 // import React, { useEffect } from "react";
 // import { useDispatch, useSelector } from "react-redux";
  import { Navigate } from "react-router-dom";

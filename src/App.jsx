@@ -1,8 +1,9 @@
-import React,{Suspense, lazy} from 'react'
+import React,{Suspense, lazy, useEffect} from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectRoute from './components/auth/ProtectRoute';
 import NotFound from './pages/NotFound';
 import { LayoutLoader } from './components/layout/Loaders';
+import {server} from './constants/config'
 //import AdminLogin from './pages/admin/AdminLogin';
 const Home=lazy(()=>import("./pages/Home"))
 const Login=lazy(()=>import("./pages/Login"))
@@ -17,11 +18,29 @@ const MessagesManagement = lazy(() =>
   import("./pages/admin/MessageManagement")
 );
 
+import axios from "axios"
+import { useDispatch, useSelector } from 'react-redux';
+import { userNotExists } from './redux/reducers/auth';
 
-let user=true;
+//let user=true;
 
 function App() {
-  return (
+//, { withCredentials: true }{ data }dispatch(userExists(data.user)).
+const { user, loader } = useSelector((state) => state.auth);
+const dispatch = useDispatch();
+
+  useEffect(() => {
+  console.log(server);
+     axios
+      .get(`${server}/api/v1/user/me`)
+      .then((res) => console.log(res) )
+       .catch((err) =>dispatch(userNotExists()));
+  }, [dispatch]);
+
+
+  return loader ?(
+    <LayoutLoader />
+  ) : (
     <BrowserRouter>
     <Suspense fallback={<LayoutLoader/>} >
     <Routes>

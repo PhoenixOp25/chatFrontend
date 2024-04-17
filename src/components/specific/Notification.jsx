@@ -16,7 +16,7 @@ import React, { memo } from "react";
 //   useGetNotificationsQuery,
 // } from "../../redux/api/api";
 // import { setIsNotification } from "../../redux/reducers/misc";
-import { sampleNotification } from "../constants/sampleData";
+import { sampleNotification } from "../../constants/sampleData";
 
 const Notifications = () => {
   // const { isNotification } = useSelector((state) => state.misc);

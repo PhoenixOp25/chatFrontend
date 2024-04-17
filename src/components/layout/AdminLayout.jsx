@@ -17,7 +17,7 @@ import {
     Typography,
     styled,
   } from "@mui/material";
-import { grayColor, matBlack } from '../constants/color';
+import { grayColor, matBlack } from '../../constants/color';
 import { Link as LinkComponent, Navigate, useLocation } from "react-router-dom";
 
 //import { Link } from '../styles/StyledComponents';

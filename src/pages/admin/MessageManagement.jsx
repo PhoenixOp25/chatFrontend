@@ -8,7 +8,7 @@ import Table from "../../components/shared/Table";
 //import { server } from "../../constants/config";
 // import { useErrors } from "../../hooks/hook";
  import { fileFormat, transformImage } from "../../lib/features";
- import { dashboardData } from "../../components/constants/sampleData";
+ import { dashboardData } from "../../constants/sampleData";
 
 const columns = [
   {

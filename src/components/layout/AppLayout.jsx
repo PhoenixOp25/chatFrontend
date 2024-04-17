@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Title from '../shared/Title'
 import {Grid} from "@mui/material"
 import ChatList from '../specific/ChatList'
-import { sampleChats } from '../constants/sampleData'
+import { sampleChats } from '../../constants/sampleData'
 import { useParams } from 'react-router-dom'
 import Profile from '../specific/Profile'
 const AppLayout = () => (WrappedComponent)=> {

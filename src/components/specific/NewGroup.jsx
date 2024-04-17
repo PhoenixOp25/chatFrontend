@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { sampleUsers } from "../constants/sampleData";
+import { sampleUsers } from "../../constants/sampleData";
 import UserItem from "../shared/UserItem";
 // import { useDispatch, useSelector } from "react-redux";
 // import {

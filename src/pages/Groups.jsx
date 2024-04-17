@@ -20,11 +20,11 @@ import {
     KeyboardBackspace as KeyboardBackspaceIcon,
     Menu as MenuIcon,
   } from "@mui/icons-material";
-  import { bgGradient, matBlack } from "../components/constants/color";
+  import { bgGradient, matBlack } from "../constants/color";
   import { useNavigate, useSearchParams } from "react-router-dom";
   import { Link } from "../components/styles/StyledComponents";
   import AvatarCard from "../components/shared/AvatarCard";
-  import {sampleChats, sampleUsers} from "../components/constants/sampleData"
+  import {sampleChats, sampleUsers} from "../constants/sampleData"
 import AddMemberDialog from "../components/dialogs/AddMemberDialog";
 import UserItem from "../components/shared/UserItem";
   const ConfirmDeleteDialog = lazy(() =>
