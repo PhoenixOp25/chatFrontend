@@ -20,8 +20,8 @@ const MessagesManagement = lazy(() =>
 
 import axios from "axios"
 import { useDispatch, useSelector } from 'react-redux';
-import { userNotExists } from './redux/reducers/auth';
-
+import { userExists, userNotExists } from './redux/reducers/auth';
+import {Toaster} from "react-hot-toast"
 //let user=true;
 
 function App() {
@@ -30,10 +30,10 @@ const { user, loader } = useSelector((state) => state.auth);
 const dispatch = useDispatch();
 
   useEffect(() => {
-  console.log(server);
+  //console.log(server);
      axios
-      .get(`${server}/api/v1/user/me`)
-      .then((res) => console.log(res) )
+      .get(`${server}/api/v1/user/me`,{withCredentials:true})
+      .then(({data}) => dispatch(userExists(data.user) ))
        .catch((err) =>dispatch(userNotExists()));
   }, [dispatch]);
 
@@ -66,6 +66,7 @@ const dispatch = useDispatch();
 
     </Routes>
     </Suspense>
+    <Toaster position='bottom-centre' />
     </BrowserRouter>
   )
 }

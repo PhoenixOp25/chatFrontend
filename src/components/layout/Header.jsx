@@ -10,8 +10,13 @@ import {
     Notifications as NotificationsIcon,
   } from "@mui/icons-material";
   import { useNavigate } from "react-router-dom";
+import { server } from '../../constants/config';
+import toast from 'react-hot-toast';
+import { userNotExists } from '../../redux/reducers/auth';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
  // import Backdrop from '@mui/material/Backdrop';
-
+import {setIsMobile, setIsNotification, setIsSearch} from "../../redux/reducers/misc.js"
 
 
   const SearchDialog = lazy(() => import("../specific/Search"));
@@ -20,26 +25,43 @@ import {
 
 
 const Header = () => {
+  const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [ismobile,setIsMobile]=useState(false);
-    const [isSearch,setIsSerach]=useState(false);
+
+
+    const { isSearch,isNotification } = useSelector(
+      (state) => state.misc
+    );
+
+
+   // const [ismobile,setIsMobile]=useState(false);
+    
     const [isNewGroup,setIsNewGroup]=useState(false);
-    const [isNotification,setIsNotification]=useState(false);
+    
     const handleMobile = () => {
-        setIsMobile(!ismobile);
+        dispatch(setIsMobile(true));
 
     };
     const openSearch = () => {
-        setIsSerach((prev)=>!prev);
+        dispatch(setIsSearch(true));
     };
     const openNewGroup = () => {
         setIsNewGroup((prev)=>!prev);
     };
     const openNotification = () => {
-        setIsNotification((prev)=>!prev);
+        dispatch(setIsNotification(true));
     };
-    const logoutHandler= () => {
-        console.log("logoutHandler");
+    const logoutHandler= async () => {
+        //console.log("logoutHandler");
+        try {
+          const { data } = await axios.get(`${server}/api/v1/user/logout`, {
+            withCredentials: true,
+          });
+          dispatch(userNotExists());
+          toast.success(data.message);
+        } catch (error) {
+          toast.error(error?.response?.data?.message || "Something went wrong");
+        }
     };
     const navigateToGroup = () => navigate("/groups");
   return (<>

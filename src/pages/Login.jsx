@@ -14,6 +14,11 @@ import {
 import {useInputValidation,useFileHandler,useStrongPassword } from '6pp';
   import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { usernameValidator } from '../utils/validators';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { userExists } from '../redux/reducers/auth';
+import { server } from "../constants/config";
 const Login = () => {
     const [isLogin,setIsLogin]=useState(true);
     const toggleLogin = () => setIsLogin((prev)=> !prev);
@@ -24,13 +29,61 @@ const username = useInputValidation("",usernameValidator);
 const password = useStrongPassword();
 
 const avatar = useFileHandler("single");
+const dispatch = useDispatch();
 
-
-const handleLogin = (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
+    
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/login`,
+        {
+          username: username.value,
+          password: password.value,
+        },
+        config
+      );
+      dispatch(userExists(true));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong");
+    } 
 }
-const handleSignUp = (e) => {
+const handleSignUp =async (e) =>{
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("avatar", avatar.file);
+    formData.append("name", name.value);
+    formData.append("bio", bio.value);
+    formData.append("username", username.value);
+    formData.append("password", password.value);
+
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/new`,
+        formData,
+        config
+      );
+
+      dispatch(userExists(true));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong");
+    }
 }
 
   return (
@@ -56,6 +109,7 @@ const handleSignUp = (e) => {
                     width: "100%",
                     marginTop: "1rem",
                   }}
+                  onSubmit={handleLogin}
               >
                 <TextField
                   required 

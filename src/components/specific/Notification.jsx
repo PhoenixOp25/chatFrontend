@@ -9,21 +9,22 @@ import {
   Typography,
 } from "@mui/material";
 import React, { memo } from "react";
-// import { useDispatch, useSelector } from "react-redux";
+ import { useDispatch, useSelector } from "react-redux";
 // import { useAsyncMutation, useErrors } from "../../hooks/hook";
-// import {
-//   useAcceptFriendRequestMutation,
-//   useGetNotificationsQuery,
-// } from "../../redux/api/api";
-// import { setIsNotification } from "../../redux/reducers/misc";
+ import {
+  // useAcceptFriendRequestMutation,
+   useGetNotificationsQuery,
+ } from "../../redux/api/api";
+ import { setIsNotification } from "../../redux/reducers/misc";
 import { sampleNotification } from "../../constants/sampleData";
+import { useErrors } from "../../hooks/hook";
 
 const Notifications = () => {
-  // const { isNotification } = useSelector((state) => state.misc);
+   const { isNotification } = useSelector((state) => state.misc);
 
  // const dispatch = useDispatch();
 
-  // const { isLoading, data, error, isError } = useGetNotificationsQuery();
+   const { isLoading, data, error, isError } = useGetNotificationsQuery();
 
   // const [acceptRequest] = useAsyncMutation(useAcceptFriendRequestMutation);
 
@@ -33,21 +34,21 @@ const Notifications = () => {
 
   };
 
-  // const closeHandler = () => dispatch(setIsNotification(false));
+   const closeHandler = () => dispatch(setIsNotification(false));
 
-  // useErrors([{ error, isError }]);
-//={isNotification} onClose={closeHandler}
+   useErrors([{ error, isError }]);
+//
   return (
-    <Dialog open>
+    <Dialog open={isNotification} onClose={closeHandler}>
       <Stack p={{ xs: "1rem", sm: "2rem" }} maxWidth={"25rem"}>
         <DialogTitle>Notifications</DialogTitle>
 
-        {/* {isLoading ? (
+        {isLoading ? (
           <Skeleton />
-        ) : ( */}
+        ) : (
           <>
-            {sampleNotification.length > 0 ? (
-              sampleNotification.map(({ sender, _id }) => (
+            {data.allRequests.length > 0 ? (
+              data.allRequests?.map(({ sender, _id }) => (
                 <NotificationItem
                   sender={sender}
                   _id={_id}
@@ -59,7 +60,7 @@ const Notifications = () => {
               <Typography textAlign={"center"}>0 notifications</Typography>
             )}
           </>
-        {/* )} */}
+         )} 
       </Stack>
     </Dialog>
   );
