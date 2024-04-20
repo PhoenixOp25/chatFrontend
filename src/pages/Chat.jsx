@@ -16,64 +16,64 @@ import { InputBox } from "../components/styles/StyledComponents";
 import FileMenu from "../components/dialogs/FileMenu";
 import { sampleMessage } from "../constants/sampleData";
 import MessageComponent from "../components/shared/MessageComponent";
+import { getSocket } from "../utils/socket";
 // import FileMenu from "../components/dialogs/FileMenu";
 // import MessageComponent from "../components/shared/MessageComponent";
-// import { getSocket } from "../socket";
-// import {
-//   ALERT,
-//   CHAT_JOINED,
-//   CHAT_LEAVED,
-//   NEW_MESSAGE,
-//   START_TYPING,
-//   STOP_TYPING,
-// } from "../constants/events";
-// import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
-// import { useErrors, useSocketEvents } from "../hooks/hook";
-// import { useInfiniteScrollTop } from "6pp";
+ 
+import {
+  ALERT,
+  CHAT_JOINED,
+  CHAT_LEAVED,
+  NEW_MESSAGE,
+  START_TYPING,
+  STOP_TYPING,
+} from "../constants/events";
+ import { useChatDetailsQuery, useGetMessagesQuery  } from "../redux/api/api";
+import {useErrors, useSocketEvents } from "../hooks/hook.js";
+
+ import { useInfiniteScrollTop } from "6pp";
 // import { useDispatch } from "react-redux";
 // import { setIsFileMenu } from "../redux/reducers/misc";
 // import { removeNewMessagesAlert } from "../redux/reducers/chat";
 // import { TypingLoader } from "../components/layout/Loaders";
 // import { useNavigate } from "react-router-dom";
-const user={
-  _id:"me",
-  name:"sagar"
-}
-const Chat = ({ chatId, user }) => {
-  // const socket = getSocket();
+
+const Chat = ({ chatId,user }) => {
+   const socket = getSocket();
   // const dispatch = useDispatch();
   // const navigate = useNavigate();
 
   const containerRef = useRef(null);
   // const bottomRef = useRef(null);
 
-  // const [message, setMessage] = useState("");
-  // const [messages, setMessages] = useState([]);
-  // const [page, setPage] = useState(1);
+   const [message, setMessage] = useState("");
+  // console.log(message)
+   const [messages, setMessages] = useState([]);
+   const [page, setPage] = useState(1);
   // const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
   // const [IamTyping, setIamTyping] = useState(false);
   // const [userTyping, setUserTyping] = useState(false);
   // const typingTimeout = useRef(null);
 
-  // const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
+   const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
 
-  // const oldMessagesChunk = useGetMessagesQuery({ chatId, page });
+   const oldMessagesChunk = useGetMessagesQuery({ chatId, page });
 
-  // const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
-  //   containerRef,
-  //   oldMessagesChunk.data?.totalPages,
-  //   page,
-  //   setPage,
-  //   oldMessagesChunk.data?.messages
-  // );
+  const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
+    containerRef,
+    oldMessagesChunk.data?.totalPages,
+    page,
+    setPage,
+    oldMessagesChunk.data?.messages
+  );
 
-  // const errors = [
-  //   { isError: chatDetails.isError, error: chatDetails.error },
-  //   { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
-  // ];
-
-  // const members = chatDetails?.data?.chat?.members;
+  const errors = [
+    { isError: chatDetails.isError, error: chatDetails.error },
+    { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
+  ];
+  
+   const members = chatDetails?.data?.chat?.members;
 
   // const messageOnChange = (e) => {
   //   setMessage(e.target.value);
@@ -96,16 +96,17 @@ const Chat = ({ chatId, user }) => {
   //   setFileMenuAnchor(e.currentTarget);
   // };
 
-  // const submitHandler = (e) => {
-  //   e.preventDefault();
+  const submitHandler = (e) => {
+    e.preventDefault();
 
-  //   if (!message.trim()) return;
+    if (!message.trim()) return;
 
-  //   // Emitting the message to the server
-  //   socket.emit(NEW_MESSAGE, { chatId, members, message });
-  //   setMessage("");
-  // };
-
+    // Emitting the message to the server
+    socket.emit(NEW_MESSAGE, { chatId, members, message });
+    setMessage("");
+  };
+  
+const allMessages=[...oldMessages,...messages]
   // useEffect(() => {
   //   socket.emit(CHAT_JOINED, { userId: user._id, members });
   //   dispatch(removeNewMessagesAlert(chatId));
@@ -128,14 +129,14 @@ const Chat = ({ chatId, user }) => {
   //   if (chatDetails.isError) return navigate("/");
   // }, [chatDetails.isError]);
 
-  // const newMessagesListener = useCallback(
-  //   (data) => {
-  //     if (data.chatId !== chatId) return;
+  const newMessagesListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
 
-  //     setMessages((prev) => [...prev, data.message]);
-  //   },
-  //   [chatId]
-  // );
+      setMessages((prev) => [...prev, data.message]);
+    },
+    [chatId]
+  );
 
   // const startTypingListener = useCallback(
   //   (data) => {
@@ -172,20 +173,22 @@ const Chat = ({ chatId, user }) => {
   //   [chatId]
   // );
 
-  // const eventHandler = {
-  //   [ALERT]: alertListener,
-  //   [NEW_MESSAGE]: newMessagesListener,
-  //   [START_TYPING]: startTypingListener,
-  //   [STOP_TYPING]: stopTypingListener,
-  // };
+  const eventHandler = {
+    //[ALERT]: alertListener,
+    [NEW_MESSAGE]: newMessagesListener,
+    //[START_TYPING]: startTypingListener,
+    //[STOP_TYPING]: stopTypingListener,
+  };
 
-  // useSocketEvents(socket, eventHandler);
+   useSocketEvents(socket, eventHandler);
 
-  // useErrors(errors);
+   useErrors(errors);
 
   // const allMessages = [...oldMessages, ...messages];
-// chatDetails.isLoading ?
-  return (
+// 
+  return chatDetails.isLoading ?(
+    <Skeleton/>
+  ): (
      
     <Fragment>
       <Stack
@@ -200,7 +203,13 @@ const Chat = ({ chatId, user }) => {
           overflowY: "auto",
         }}
       >
-        {sampleMessage.map((i) => (
+        {
+          !oldMessagesChunk.isLoading&& oldMessagesChunk.data?.messages?.map((i)=>(
+            <MessageComponent key={i._id} message={i} user={user}/>
+          ))
+        }
+
+        {messages.map((i) => (
           <MessageComponent key={i._id}  message={i} user={user} />
         ))}
 
@@ -213,7 +222,7 @@ const Chat = ({ chatId, user }) => {
         style={{
           height: "10%",
         }}
-        //onSubmit={submitHandler}
+        onSubmit={submitHandler}
       >
         <Stack
           direction={"row"}
@@ -235,8 +244,8 @@ const Chat = ({ chatId, user }) => {
 
           <InputBox
             placeholder="Type Message Here..."
-            // value={message}
-            // onChange={messageOnChange}
+            value={message}
+            onChange={(e)=>setMessage(e.target.value)}
           />
 
           <IconButton
