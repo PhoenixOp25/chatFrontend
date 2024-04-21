@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import Header from './Header'
 import { Helmet } from 'react-helmet-async'
 import Title from '../shared/Title'
@@ -10,8 +10,11 @@ import Profile from '../specific/Profile'
 import { useMyChatsQuery } from '../../redux/api/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsMobile } from '../../redux/reducers/misc'
-import { useErrors } from '../../hooks/hook'
+import {  useErrors, useSocketEvents } from '../../hooks/hook.jsx'
 import { getSocket } from '../../utils/socket'
+import { NEW_MESSAGE_ALERT, NEW_REQUEST } from '../../constants/events.js'
+import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers/chat.js'
+import { getOrSaveFromStorage } from '../../lib/features.js'
 const AppLayout = () => (WrappedComponent)=> {
   return (props)=>{
 
@@ -24,13 +27,19 @@ const AppLayout = () => (WrappedComponent)=> {
    // console.log(socket.id)
      const { isMobile } = useSelector((state) => state.misc);
      const { user } = useSelector((state) => state.auth);
-    // const { newMessagesAlert } = useSelector((state) => state.chat);
+     const { newMessagesAlert } = useSelector((state) => state.chat);
 
     const handleMobileClose = () => dispatch(setIsMobile(false));
-    const {isLoading,data,isError,error,refresh}=useMyChatsQuery("")
+    const {isLoading,data,isError,error,}=useMyChatsQuery("")
 
     useErrors([{isError,error}])
     //console.log(data);
+
+    useEffect(() => {
+      getOrSaveFromStorage({ key: NEW_MESSAGE_ALERT, value: newMessagesAlert });
+    }, [newMessagesAlert]);
+
+
     const handleDeleteChat = (e, _id, groupChat) => {
       // dispatch(setIsDeleteMenu(true));
       // dispatch(setSelectedDeleteChat({ chatId, groupChat }));
@@ -38,7 +47,26 @@ const AppLayout = () => (WrappedComponent)=> {
       e.preventDefault();
       console.log("del chat",_id,groupChat)
     }
+    const newMessageAlertListener = useCallback(
+      (data) => {
+        if (data.chatId === chatId) return;
+        dispatch(setNewMessagesAlert(data));
+      },
+      [chatId]
+    );
 
+    const newRequestListener = useCallback(() => {
+      dispatch(incrementNotification());
+    }, [dispatch]);
+
+    const eventHandlers = {
+      [NEW_MESSAGE_ALERT]: newMessageAlertListener,
+      [NEW_REQUEST]: newRequestListener,
+      // [REFETCH_CHATS]: refetchListener,
+      // [ONLINE_USERS]: onlineUsersListener,
+    };
+
+    useSocketEvents(socket, eventHandlers);
 
     return (
         <>
@@ -53,7 +81,7 @@ const AppLayout = () => (WrappedComponent)=> {
               chats={data?.chats}
               chatId={chatId}
               handleDeleteChat={handleDeleteChat}
-              //newMessagesAlert={newMessagesAlert}
+              newMessagesAlert={newMessagesAlert}
               //onlineUsers={onlineUsers}
             />
           </Drawer>
@@ -74,6 +102,7 @@ const AppLayout = () => (WrappedComponent)=> {
             {isLoading?(<Skeleton/>):(
               <ChatList chats={data?.chats} chatId={chatId}
               handleDeleteChat={handleDeleteChat}
+              newMessagesAlert={newMessagesAlert}
              />
             )}
           </Grid>

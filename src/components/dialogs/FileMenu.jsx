@@ -1,74 +1,78 @@
 import { ListItemText, Menu, MenuItem, MenuList, Tooltip } from "@mui/material";
 import React, { useRef } from "react";
-//import { useDispatch, useSelector } from "react-redux";
-//import { setIsFileMenu, setUploadingLoader } from "../../redux/reducers/misc";
-//import {
-//   AudioFile as AudioFileIcon,
-//   Image as ImageIcon,
-//   UploadFile as UploadFileIcon,
-//   VideoFile as VideoFileIcon,
-// } from "@mui/icons-material";
-// import toast from "react-hot-toast";
-// import { useSendAttachmentsMutation } from "../../redux/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsFileMenu, setUploadingLoader,  } from "../../redux/reducers/misc";
+import {
+  AudioFile as AudioFileIcon,
+  Image as ImageIcon,
+  UploadFile as UploadFileIcon,
+  VideoFile as VideoFileIcon,
+} from "@mui/icons-material";
+ import toast from "react-hot-toast";
+ import { useSendAttachmentsMutation } from "../../redux/api/api";
 
-const FileMenu = ({ anchorE1 }) => {
-//   const { isFileMenu } = useSelector((state) => state.misc);
+const FileMenu = ({ anchorE1,chatId }) => {
+   const { isFileMenu } = useSelector((state) => state.misc);
 
-//   const dispatch = useDispatch();
+   const dispatch = useDispatch();
 
-//   const imageRef = useRef(null);
-//   const audioRef = useRef(null);
-//   const videoRef = useRef(null);
-//   const fileRef = useRef(null);
+ const imageRef = useRef(null);
+  const audioRef = useRef(null);
+  const videoRef = useRef(null);
+  const fileRef = useRef(null);
 
-//   const [sendAttachments] = useSendAttachmentsMutation();
+   const [sendAttachments] = useSendAttachmentsMutation();
 
-//   const closeFileMenu = () => dispatch(setIsFileMenu(false));
+   const closeFileMenu = () => dispatch(setIsFileMenu(false));
 
-//   const selectImage = () => imageRef.current?.click();
-//   const selectAudio = () => audioRef.current?.click();
-//   const selectVideo = () => videoRef.current?.click();
-//   const selectFile = () => fileRef.current?.click();
+  const selectImage = () => imageRef.current?.click();
+  const selectAudio = () => audioRef.current?.click();
+  const selectVideo = () => videoRef.current?.click();
+  const selectFile = () => fileRef.current?.click();
 
-//   const fileChangeHandler = async (e, key) => {
-//     const files = Array.from(e.target.files);
+  const fileChangeHandler = async (e, key) => {
+    const files = Array.from(e.target.files);
+    console.log("abcs");
+    if (files.length <= 0) return;
 
-//     if (files.length <= 0) return;
+    if (files.length > 5)
+      return toast.error(`You can only send 5 ${key} at a time bro..`);
 
-//     if (files.length > 5)
-//       return toast.error(`You can only send 5 ${key} at a time`);
+    dispatch(setUploadingLoader(true));
+    console.log("abcs1");
+    const toastId = toast.loading(`Sending ${key}...`);
+    closeFileMenu();
+    console.log("abcs2");
+    try {
+      const myForm = new FormData();
 
-//     dispatch(setUploadingLoader(true));
+      myForm.append("chatId", chatId);
+      files.forEach((file) => myForm.append("files", file));
 
-//     const toastId = toast.loading(`Sending ${key}...`);
-//     closeFileMenu();
-
-//     try {
-//       const myForm = new FormData();
-
-//       myForm.append("chatId", chatId);
-//       files.forEach((file) => myForm.append("files", file));
-
-//       const res = await sendAttachments(myForm);
-
-//       if (res.data) toast.success(`${key} sent successfully`, { id: toastId });
-//       else toast.error(`Failed to send ${key}`, { id: toastId });
-
-//       // Fetching Here
-//     } catch (error) {
-//       toast.error(error, { id: toastId });
-//     } finally {
-//       dispatch(setUploadingLoader(false));
-//     }
-//   };
-// anchorEl={anchorE1} open={isFileMenu} onClose={closeFileMenu}
+      const res = await sendAttachments(myForm);
+      console.log("abcsetjhe3");
+      if (res.data) toast.success(`${key} sent successfully...`, { id: toastId });
+      //console.log("abcsif3");
+      else toast.error(`Failed to send ${key}`, { id: toastId });
+      console.log("abcs3");
+      // Fetching Here
+    } catch (error) {
+      toast.error(error, { id: toastId });
+    } finally {
+      dispatch(setUploadingLoader(false));
+    }
+    console.log("abcsfinal");
+  };
+//  onClick={selectFile}
+// anchorEl={anchorE1} open={isFileMenu} 
   return (
-    <Menu open={false} anchorEl={anchorE1}>
-      {/* <div
+    <Menu anchorEl={anchorE1}  open={isFileMenu} onClose={closeFileMenu}>
+      <div
         style={{
           width: "10rem",
         }}
       >
+        
         <MenuList>
           <MenuItem onClick={selectImage}>
             <Tooltip title="Image">
@@ -115,7 +119,7 @@ const FileMenu = ({ anchorE1 }) => {
             />
           </MenuItem>
 
-          <MenuItem onClick={selectFile}>
+          <MenuItem onClick={() => { console.log("hii"); selectFile(); }}>
             <Tooltip title="File">
               <UploadFileIcon />
             </Tooltip>
@@ -130,8 +134,9 @@ const FileMenu = ({ anchorE1 }) => {
             />
           </MenuItem>
         </MenuList>
-      </div> */}
-      sad
+         sad
+      </div>
+     
     </Menu>
   );
 };
