@@ -16,7 +16,7 @@ import { userNotExists } from '../../redux/reducers/auth';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
  // import Backdrop from '@mui/material/Backdrop';
-import {setIsMobile, setIsNotification, setIsSearch} from "../../redux/reducers/misc.js"
+import {setIsMobile, setIsNewGroup, setIsNotification, setIsSearch} from "../../redux/reducers/misc.js"
 import { resetNotificationCount } from '../../redux/reducers/chat.js';
 
 
@@ -30,7 +30,8 @@ const Header = () => {
     const navigate = useNavigate();
 
 
-    const { isSearch,isNotification } = useSelector(
+    const { isSearch,isNotification,isNewGroup
+     } = useSelector(
       (state) => state.misc
     );
     const {notificationCount}=useSelector((state)=>state.chat);
@@ -38,7 +39,7 @@ const Header = () => {
 
    // const [ismobile,setIsMobile]=useState(false);
     
-    const [isNewGroup,setIsNewGroup]=useState(false);
+    //const [isNewGroup,setIsNewGroup]=useState(false);
     
     const handleMobile = () => {
         dispatch(setIsMobile(true));
@@ -48,7 +49,7 @@ const Header = () => {
         dispatch(setIsSearch(true));
     };
     const openNewGroup = () => {
-        setIsNewGroup((prev)=>!prev);
+        dispatch(setIsNewGroup(true));
     };
     const openNotification = () => {
         dispatch(setIsNotification(true));

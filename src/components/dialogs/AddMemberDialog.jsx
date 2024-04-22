@@ -9,24 +9,24 @@ import {
   import React, { useState } from "react";
   //import { sampleUsers } from "../../constants/sampleData";
   import UserItem from "../shared/UserItem";
-  //import {
-    //useAddGroupMembersMutation,
-   /// useAvailableFriendsQuery,
- // } from "../../redux/api/api";
-//   import { useAsyncMutation, useErrors } from "../../hooks/hook";
-//   import { useDispatch, useSelector } from "react-redux";
-//   import { setIsAddMember } from "../../redux/reducers/misc";
+  import {
+    useAddGroupMembersMutation,
+    useAvailableFriendsQuery,
+ } from "../../redux/api/api";
+   import { useAsyncMutation, useErrors } from "../../hooks/hook";
+   import { useDispatch, useSelector } from "react-redux";
+  import { setIsAddMember } from "../../redux/reducers/misc";
 import { sampleUsers } from "../../constants/sampleData";
-  const AddMemberDialog = ({ chatId }) => {
-    //const dispatch = useDispatch();
+  const AddMemberDialog = ({chatId }) => {
+    const dispatch = useDispatch();
   
-    //const { isAddMember } = useSelector((state) => state.misc);
+    const { isAddMember } = useSelector((state) => state.misc);
   
-   // const { isLoading, data, isError, error } = useAvailableFriendsQuery(chatId);
+    const { isLoading, data, isError, error } = useAvailableFriendsQuery(chatId);
   
-    // const [addMembers, isLoadingAddMembers] = useAsyncMutation(
-    //   useAddGroupMembersMutation
-    // );
+    const [addMembers, isLoadingAddMembers] = useAsyncMutation(
+      useAddGroupMembersMutation
+    );
   const [members,setMembers]=useState(sampleUsers)
     const [selectedMembers, setSelectedMembers] = useState([]);
   
@@ -43,21 +43,21 @@ import { sampleUsers } from "../../constants/sampleData";
     const closeHandler = () => {
         setSelectedMembers([]);
         setMembers([]);
-      //dispatch(setIsAddMember(false));
+      dispatch(setIsAddMember(false));
     };
     const addMemberSubmitHandler = () => {
-    //   addMembers("Adding Members...", { members: selectedMembers, chatId });
+       addMembers("Adding Members...", { members: selectedMembers, chatId });
        closeHandler();
     };
   
-    //useErrors([{ isError, error }]);
+    useErrors([{ isError, error }]);
     return (
-      <Dialog open onClose={closeHandler}>
+      <Dialog open={isAddMember} onClose={closeHandler}>
         <Stack p={"2rem"} width={"20rem"} spacing={"2rem"}>
           <DialogTitle textAlign={"center"}>Add Member</DialogTitle>
   
           <Stack spacing={"1rem"}>
-            {/* {isLoading ? (
+            {isLoading ? (
               <Skeleton />
             ) : data?.friends?.length > 0 ? (
               data?.friends?.map((i) => (
@@ -70,8 +70,8 @@ import { sampleUsers } from "../../constants/sampleData";
               ))
             ) : (
               <Typography textAlign={"center"}>No Friends</Typography>
-            )} */}
-            {
+            )}
+            {/* {
                 members.length>0?(
                     members.map((i) => (
                         <UserItem
@@ -84,7 +84,7 @@ import { sampleUsers } from "../../constants/sampleData";
                 ):(
                     <Typography textAlign={"center"}>No Friends</Typography>
                 )
-            }
+            } */}
           </Stack>
   
           <Stack

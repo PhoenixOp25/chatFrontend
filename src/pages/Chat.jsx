@@ -27,7 +27,7 @@ import {
   NEW_MESSAGE,
   START_TYPING,
   STOP_TYPING,
-} from "../constants/events";
+} from "../constants/events.js";
  import { useChatDetailsQuery, useGetMessagesQuery  } from "../redux/api/api";
 import {useErrors, useSocketEvents } from "../hooks/hook.jsx";
 
@@ -35,17 +35,18 @@ import {useErrors, useSocketEvents } from "../hooks/hook.jsx";
  import { useDispatch } from "react-redux";
  import { setIsFileMenu } from "../redux/reducers/misc";
 import { removeNewMessagesAlert } from "../redux/reducers/chat.js";
+import { TypingLoader } from "../components/layout/Loaders.jsx";
 // import { removeNewMessagesAlert } from "../redux/reducers/chat";
 // import { TypingLoader } from "../components/layout/Loaders";
-// import { useNavigate } from "react-router-dom";
+ import { useNavigate } from "react-router-dom";
 
 const Chat = ({ chatId,user }) => {
    const socket = getSocket();
    const dispatch = useDispatch();
-  // const navigate = useNavigate();
+   const navigate = useNavigate();
 
   const containerRef = useRef(null);
-  // const bottomRef = useRef(null);
+   const bottomRef = useRef(null);
 
    const [message, setMessage] = useState("");
   // console.log(message)
@@ -78,18 +79,18 @@ const Chat = ({ chatId,user }) => {
 
   const messageOnChange = (e) => {
     setMessage(e.target.value);
-    socket.emit(START_TYPING, { members, chatId });
-    // if (!IamTyping) {
-    //   socket.emit(START_TYPING, { members, chatId });
-    //   setIamTyping(true);
-    // }
+    //socket.emit(START_TYPING, { members, chatId });
+    if (!IamTyping) {
+      socket.emit(START_TYPING, { members, chatId });
+      setIamTyping(true);
+    }
 
-    // if (typingTimeout.current) clearTimeout(typingTimeout.current);
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
 
-    // typingTimeout.current = setTimeout(() => {
-    //   socket.emit(STOP_TYPING, { members, chatId });
-    //   setIamTyping(false);
-    // }, [2000]);
+    typingTimeout.current = setTimeout(() => {
+      socket.emit(STOP_TYPING, { members, chatId });
+      setIamTyping(false);
+    }, [2000]);
   };
 
   const handleFileOpen = (e) => {
@@ -121,14 +122,14 @@ const allMessages=[...oldMessages,...messages]
     };
   }, [chatId]);
 
-  // useEffect(() => {
-  //   if (bottomRef.current)
-  //     bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
+  useEffect(() => {
+    if (bottomRef.current)
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  // useEffect(() => {
-  //   if (chatDetails.isError) return navigate("/");
-  // }, [chatDetails.isError]);
+  useEffect(() => {
+    if (chatDetails.isError) return navigate("/");
+  }, [chatDetails.isError]);
 
   const newMessagesListener = useCallback(
     (data) => {
@@ -141,20 +142,22 @@ const allMessages=[...oldMessages,...messages]
 
   const startTypingListener = useCallback(
     (data) => {
+      console.log("hi")
       if (data.chatId !== chatId) return;
-
+      //console.log("typing",data);
       setUserTyping(true);
     },
     [chatId]
   );
 
-  // const stopTypingListener = useCallback(
-  //   (data) => {
-  //     if (data.chatId !== chatId) return;
-  //     setUserTyping(false);
-  //   },
-  //   [chatId]
-  // );
+  const stopTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      setUserTyping(false);
+     // console.log("stop typing",data);
+    },
+    [chatId]
+  );
 
   const alertListener = useCallback(
     (data) => {
@@ -162,7 +165,7 @@ const allMessages=[...oldMessages,...messages]
       const messageForAlert = {
         content: data.message,
         sender: {
-          _id: "djasdhajksdhasdsadasdas",
+          _id: "djasdhaikymhygmadasdas",
           name: "Admin",
         },
         chat: chatId,
@@ -175,10 +178,10 @@ const allMessages=[...oldMessages,...messages]
   );
 
   const eventHandler = {
-    //[ALERT]: alertListener,
+    [ALERT]: alertListener,
     [NEW_MESSAGE]: newMessagesListener,
     [START_TYPING]: startTypingListener,
-    //[STOP_TYPING]: stopTypingListener,
+    [STOP_TYPING]: stopTypingListener,
   };
 
    useSocketEvents(socket, eventHandler);
@@ -204,19 +207,19 @@ const allMessages=[...oldMessages,...messages]
           overflowY: "auto",
         }}
       >
-        {
+        {/* {
           !oldMessagesChunk.isLoading&& oldMessagesChunk.data?.messages?.map((i)=>(
             <MessageComponent key={i._id} message={i} user={user}/>
           ))
-        }
+        } */}
 
-        {messages.map((i) => (
+        {allMessages.map((i) => (
           <MessageComponent key={i._id}  message={i} user={user} />
         ))}
 
-        {/* {userTyping && <TypingLoader />}
+        {userTyping && <TypingLoader />}
 
-        <div ref={bottomRef} /> */}
+        <div ref={bottomRef} />
       </Stack>
 
       <form
