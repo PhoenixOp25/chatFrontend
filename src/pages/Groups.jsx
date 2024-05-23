@@ -38,7 +38,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 
   const Groups=()=>{
-
+    const chatId=useSearchParams()[0].get("group");
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isAddMember } = useSelector((state) => state.misc);
 
@@ -57,9 +58,8 @@ import { useDispatch, useSelector } from "react-redux";
       useDeleteChatMutation
     );
 
-    const chatId=useSearchParams()[0].get("group");
-const navigate = useNavigate();
-console.log(chatId);
+    
+///console.log(chatId);
 const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 const [isEdit,setIsEdit]=useState(false);
 const [groupName, setGroupName] = useState("");
