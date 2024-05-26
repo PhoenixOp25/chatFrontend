@@ -19,6 +19,8 @@ import {
   } from "@mui/material";
 import { grayColor, matBlack } from '../../constants/color';
 import { Link as LinkComponent, Navigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { adminLogout } from '../../redux/thunks/admin';
 
 //import { Link } from '../styles/StyledComponents';
 
@@ -57,10 +59,11 @@ const adminTabs=[{
 
   const Sidebar = ({ w = "100%" }) => {
      const location = useLocation();
-    // const dispatch = useDispatch();
+     const dispatch = useDispatch();
   
     const logoutHandler = () => {
       console.log("logout");
+      dispatch(adminLogout())
     }
     return (
         <Stack width={w} direction={"column"} p={"3rem"} spacing={"3rem"}>
@@ -101,8 +104,10 @@ const adminTabs=[{
     )
     };
 
-    const isAdmin=true;
+    
 const AdminLayout = ({children}) => {
+  const {isAdmin}=useSelector((state)=>state.auth)
+ // const isAdmin=true;
     const [isMobile, setIsMobile] = useState(false);
 
   const handleMobile = () => setIsMobile(!isMobile);

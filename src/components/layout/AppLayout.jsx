@@ -1,21 +1,19 @@
+import { Drawer, Grid, Skeleton } from "@mui/material"
 import React, { useCallback, useEffect, useRef } from 'react'
-import Header from './Header'
-import { Helmet } from 'react-helmet-async'
-import Title from '../shared/Title'
-import {Drawer, Grid, Skeleton} from "@mui/material"
-import ChatList from '../specific/ChatList'
-import { sampleChats } from '../../constants/sampleData'
-import { useNavigate, useParams } from 'react-router-dom'
-import Profile from '../specific/Profile'
-import { useMyChatsQuery } from '../../redux/api/api'
 import { useDispatch, useSelector } from 'react-redux'
-import {  setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducers/misc'
-import {  useErrors, useSocketEvents } from '../../hooks/hook.jsx'
-import { getSocket } from '../../utils/socket'
+import { useNavigate, useParams } from 'react-router-dom'
 import { NEW_MESSAGE_ALERT, NEW_REQUEST, REFETCH_CHATS } from '../../constants/events.js'
-import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers/chat.js'
+import { useErrors, useSocketEvents } from '../../hooks/hook.jsx'
 import { getOrSaveFromStorage } from '../../lib/features.js'
+import { useMyChatsQuery } from '../../redux/api/api'
+import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers/chat.js'
+import { setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducers/misc'
+import { getSocket } from '../../utils/socket'
 import DeleteChatMenu from "../dialogs/DeleteChatMenu.jsx"
+import Title from '../shared/Title'
+import ChatList from '../specific/ChatList'
+import Profile from '../specific/Profile'
+import Header from './Header'
 
 
 const AppLayout = () => (WrappedComponent)=> {

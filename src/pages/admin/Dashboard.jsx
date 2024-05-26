@@ -23,10 +23,19 @@ import {
 } from "../../components/styles/StyledComponents";
 import { matBlack } from '../../constants/color';
 import { DoughnutChart, LineChart } from '../../components/specific/Charts';
-
-
+import { useFetchData } from '6pp';
+import { server } from '../../constants/config';
+import { DoughnutChart, LineChart } from "../../components/specific/Charts";
+import { LayoutLoader } from '../../components/layout/Loaders';
 
 const Dashboard = () => {
+
+
+  const { loading, data, error } = useFetchData(
+    `${server}/api/v1/admin/stats`,
+    "dashboard-stats"
+  );
+
   const Appbar = (
     <Paper
       elevation={3}
@@ -82,7 +91,7 @@ const Dashboard = () => {
   );
 
 
-  return (
+  return loading?(<LayoutLoader/>):(
     <AdminLayout>
     <Container component={"main"}>
           {Appbar}

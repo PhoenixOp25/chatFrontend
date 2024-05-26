@@ -26,25 +26,26 @@ const Notifications = () => {
   const dispatch = useDispatch();
 
    const { isLoading, data, error, isError } = useGetNotificationsQuery();
-// useAsyncMutation
-   const [acceptRequest] =useAcceptFriendRequestMutation();
+// 
+   const [acceptRequest] =useAsyncMutation(useAcceptFriendRequestMutation);
 
   const  friendRequestHandler = async({ _id, accept }) => {
      dispatch(setIsNotification(false));
-    try{
-      const res=await acceptRequest({requestId:_id,accept});
-      if(res.data?.success){
-        console.log("use socket");
-        toast.success(res.data.message);
-      }
-      else{
-        toast.error(res.data?.error ||"something went wrong")
-      }
-    }
-    catch(error){
-      toast.error(error.message ||"something wrong bro")
-      console.log(error);
-    }
+     await acceptRequest("Accepting.....",{requestId:_id,accept});
+    // try{
+    //   const res=await acceptRequest({requestId:_id,accept});
+    //   if(res.data?.success){
+    //     console.log("use socket");
+    //     toast.success(res.data.message);
+    //   }
+    //   else{
+    //     toast.error(res.data?.error ||"something went wrong")
+    //   }
+    // }
+    // catch(error){
+    //   toast.error(error.message ||"something wrong bro")
+    //   console.log(error);
+    // }
 
   };
 

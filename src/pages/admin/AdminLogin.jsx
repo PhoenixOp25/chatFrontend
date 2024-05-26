@@ -7,28 +7,28 @@ import {
   Typography
 } from "@mui/material";
 import { bgGradient } from "../../constants/color";
-// import React, { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
+ import React, { useEffect } from "react";
+ import { useDispatch, useSelector } from "react-redux";
  import { Navigate } from "react-router-dom";
 // import { bgGradient } from "../../constants/color";
-// import { adminLogin, getAdmin } from "../../redux/thunks/admin";
+ import { adminLogin, getAdmin } from "../../redux/thunks/admin";
 
 const AdminLogin = () => {
-   const  isAdmin  = true;
+    //const  isAdmin  = true;
 
-//   const dispatch = useDispatch();
-
+   const dispatch = useDispatch();
+   const { isAdmin } = useSelector((state) => state.auth);
   const secretKey = useInputValidation("");
 
   const submitHandler = (e) => {
     e.preventDefault();
-    //dispatch(adminLogin(secretKey.value));
-    console.log("submit");
+    dispatch(adminLogin(secretKey.value));
+    //console.log("submit");
   };
 
-//   useEffect(() => {
-//     dispatch(getAdmin());
-//   }, [dispatch]);
+  useEffect(() => {
+    dispatch(getAdmin());
+  }, [dispatch]);
 
   if (isAdmin) return <Navigate to="/admin/dashboard" />;
 

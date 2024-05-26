@@ -14,9 +14,9 @@ const MessageComponent = ({ message, user }) => {
     const timeAgo = moment(createdAt).fromNow();
 
   return (
-    <div
-    //   initial={{ opacity: 0, x: "-100%" }}
-    //   whileInView={{ opacity: 1, x: 0 }}
+    <motion.div
+       initial={{ opacity: 0, x: "-100%" }}
+       whileInView={{ opacity: 1, x: 0 }}
       style={{
         alignSelf:sameSender ? "flex-end" : "flex-start",
         backgroundColor: "white",
@@ -58,7 +58,7 @@ const MessageComponent = ({ message, user }) => {
       <Typography variant="caption" color={"text.secondary"}>
         {timeAgo}
       </Typography>
-    </div>
+    </motion.div>
   );
 };
 
