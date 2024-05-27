@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../components/layout/AdminLayout";
 import AvatarCard from "../../components/shared/AvatarCard";
 import Table from "../../components/shared/Table";
-// import { server } from "../../constants/config";
-// import { useErrors } from "../../hooks/hook";
+ import { server } from "../../constants/config";
+ import { useErrors } from "../../hooks/hook";
 import { transformImage } from "../../lib/features";
 import { dashboardData } from "../../constants/sampleData";
 
@@ -73,24 +73,24 @@ const columns = [
 ];
 
 const ChatManagement = () => {
-//   const { loading, data, error } = useFetchData(
-//     `${server}/api/v1/admin/chats`,
-//     "dashboard-chats"
-//   );
+  const { loading, data, error } = useFetchData(
+    `${server}/api/v1/admin/chats`,
+    "dashboard-chats"
+  );
 
-//   useErrors([
-//     {
-//       isError: error,
-//       error: error,
-//     },
-//   ]);
+  useErrors([
+    {
+      isError: error,
+      error: error,
+    },
+  ]);
 
   const [rows, setRows] = useState([]);
-
+//console.log(data)
   useEffect(() => {
-    //if (data) {
+    if (data) {
       setRows(
-        dashboardData.chats.map((i) => ({
+        data.chats.map((i) => ({
           ...i,
           id: i._id,
           avatar: i.avatar.map((i) => transformImage(i, 50)),
@@ -101,17 +101,17 @@ const ChatManagement = () => {
           },
         }))
       );
-    //}
-  }, []);
+    }
+  }, [data]);
 
   return (
     <AdminLayout>
-      {/* {loading ? (
+      {loading ? (
         <Skeleton height={"100vh"} />
       ) : (
-        
-      )} */}
-      <Table heading={"All Chats"} columns={columns} rows={rows} />
+        <Table heading={"All Chats"} columns={columns} rows={rows} />
+      )}
+      
     </AdminLayout>
   );
 };

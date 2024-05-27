@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../components/layout/AdminLayout";
 import RenderAttachment from "../../components/shared/RenderAttachment";
 import Table from "../../components/shared/Table";
-//import { server } from "../../constants/config";
-// import { useErrors } from "../../hooks/hook";
+import { server } from "../../constants/config";
+import { useErrors } from "../../hooks/hook";
  import { fileFormat, transformImage } from "../../lib/features";
  import { dashboardData } from "../../constants/sampleData";
 
@@ -88,24 +88,24 @@ const columns = [
 ];
 
 const MessageManagement = () => {
-//   const { loading, data, error } = useFetchData(
-//     `${server}/api/v1/admin/messages`,
-//     "dashboard-messages"
-//   );
+  const { loading, data, error } = useFetchData(
+    `${server}/api/v1/admin/messages`,
+    "dashboard-messages"
+  );
 
-//   useErrors([
-//     {
-//       isError: error,
-//       error: error,
-//     },
-//   ]);
+  useErrors([
+    {
+      isError: error,
+      error: error,
+    },
+  ]);
 
   const [rows, setRows] = useState([]);
-
+console.log(data);
   useEffect(() => {
-    //if (data) {
+    if (data) {
       setRows(
-        dashboardData.messages.map((i) => ({
+        data.messages.map((i) => ({
           ...i,
           id: i._id,
           sender: {
@@ -115,22 +115,22 @@ const MessageManagement = () => {
           createdAt: moment(i.createdAt).format("MMMM Do YYYY, h:mm:ss a"),
         }))
       );
-   // }
-  }, []);
+    }
+  }, [data]);
 
   return (
     <AdminLayout>
-      {/* {loading ? (
+      {loading ? (
         <Skeleton height={"100vh"} />
       ) : (
-        
-      )} */}
-      <Table
+        <Table
           heading={"All Messages"}
           columns={columns}
           rows={rows}
           rowHeight={200}
         />
+      )}
+      
     </AdminLayout>
   );
 };

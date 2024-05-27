@@ -1,8 +1,8 @@
 import { Drawer, Grid, Skeleton } from "@mui/material"
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { NEW_MESSAGE_ALERT, NEW_REQUEST, REFETCH_CHATS } from '../../constants/events.js'
+import { NEW_MESSAGE_ALERT, NEW_REQUEST, ONLINE_USERS, REFETCH_CHATS } from '../../constants/events.js'
 import { useErrors, useSocketEvents } from '../../hooks/hook.jsx'
 import { getOrSaveFromStorage } from '../../lib/features.js'
 import { useMyChatsQuery } from '../../redux/api/api'
@@ -29,6 +29,8 @@ const AppLayout = () => (WrappedComponent)=> {
 
     const deleteMenuAnchor=useRef(null);
 
+
+    const [onlineUsers,setOnlineUsers]=useState([]);
 
    // console.log(socket.id)
      const { isMobile } = useSelector((state) => state.misc);
@@ -70,12 +72,17 @@ const AppLayout = () => (WrappedComponent)=> {
       navigate("/");
     }, [refetch, navigate]);
 
+    const onlineUsersListener = useCallback((data) => {
+      setOnlineUsers(data);
+    }, []);
+
+
 
     const eventHandlers = {
       [NEW_MESSAGE_ALERT]: newMessageAlertListener,
       [NEW_REQUEST]: newRequestListener,
        [REFETCH_CHATS]: refetchListener,
-      // [ONLINE_USERS]: onlineUsersListener,
+       [ONLINE_USERS]: onlineUsersListener,
     };
 
     useSocketEvents(socket, eventHandlers);
@@ -96,7 +103,7 @@ const AppLayout = () => (WrappedComponent)=> {
               chatId={chatId}
               handleDeleteChat={handleDeleteChat}
               newMessagesAlert={newMessagesAlert}
-              //onlineUsers={onlineUsers}
+              onlineUsers={onlineUsers}
             />
           </Drawer>
         )}
@@ -117,6 +124,7 @@ const AppLayout = () => (WrappedComponent)=> {
               <ChatList chats={data?.chats} chatId={chatId}
               handleDeleteChat={handleDeleteChat}
               newMessagesAlert={newMessagesAlert}
+              onlineUsers={onlineUsers}
              />
             )}
           </Grid>
